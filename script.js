@@ -119,7 +119,7 @@ async function handleWordClick(event, d) {
             method: 'POST',
             headers: {
                 'Content-Type': 'image/png',
-                'Authorization': 'Bearer sk-HFQ5mF7E1bDIvoIIKo3wdnUE8ZnYPJKcCM4Kpldgw21hye00'
+                'Authorization': 'Bearer YOUR_API_KEY'
                 'Accept: "image/*"
             },
             body: JSON.stringify({
