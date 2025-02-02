@@ -153,6 +153,44 @@ document.getElementById('citySelect').addEventListener('change', function(e) {
 
 // Handle word click and image generation
 async function handleWordClick(d) {
+        const city = document.getElementById('citySelect').value;
+        const challenge = d.text;
+        
+        document.getElementById('loadingMessage').style.display = 'block';
+        document.getElementById('resultImage').style.display = 'none';
+        document.getElementById('downloadBtn').style.display = 'none';
+
+        try {
+            const response = await fetch('https://falling-dream-ee44.spa-mariner.workers.dev', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ city, challenge })
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const data = await response.json();
+            
+            if (!data.artifacts || !data.artifacts[0]) {
+                throw new Error('No image data received from the API');
+            }
+
+            const imageUrl = data.artifacts[0].base64;
+
+            document.getElementById('resultImage').src = `data:image/png;base64,${imageUrl}`;
+            document.getElementById('resultImage').style.display = 'block';
+            document.getElementById('downloadBtn').style.display = 'block';
+            document.getElementById('loadingMessage').style.display = 'none';
+        } catch (error) {
+            console.error('Error generating image:', error);
+            document.getElementById('loadingMessage').textContent = `Error: ${error.message}. Please try again.`;
+        }
+    }
+/*async function handleWordClick(d) {
     const city = document.getElementById('citySelect').value;
     const challenge = d.text;
     
@@ -189,7 +227,7 @@ async function handleWordClick(d) {
     } catch (error) {
         console.error('Error generating image:', error);
         document.getElementById('loadingMessage').textContent = 'Error generating image. Please try again.';
-    }
+    }*/
 }
 
 // Handle image download
