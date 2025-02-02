@@ -110,7 +110,7 @@ async function handleWordClick(event, d) {
 
     try {
         // Using Stable Diffusion API (you'll need to sign up for an API key)
-        const response = await fetch('https://api.stability.ai/v1/generation/stable-diffusion-v1-5/text-to-image', {
+        const response = await fetch('https://api.stability.ai/v2beta/stable-image/generate/sd3', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
