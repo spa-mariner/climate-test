@@ -108,13 +108,15 @@ async function handleWordClick(event, d) {
     document.getElementById('resultImage').style.display = 'none';
     document.getElementById('downloadBtn').style.display = 'none';
 
+  
     try {
         // Using Stable Diffusion API (you'll need to sign up for an API key)
         const response = await fetch('https://api.stability.ai/v2beta/stable-image/generate/sd3', {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json',
+                'Content-Type': 'image/png',
                 'Authorization': 'Bearer sk-HFQ5mF7E1bDIvoIIKo3wdnUE8ZnYPJKcCM4Kpldgw21hye00'
+                'Accept: "image/*"
             },
             body: JSON.stringify({
                 text_prompts: [
