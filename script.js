@@ -138,36 +138,37 @@ async function handleWordClick(event, d) {
         const data = await response.json();
         const imageUrl = data.artifacts[0].base64;*/ // Assuming the API returns base64 image
         const payload = {
-  prompt: "Lighthouse on a cliff overlooking the ocean",
-  output_format: "jpeg"
-};
+                          prompt: `${city} city facing ${challenge.toLowerCase()} climate challenge, digital art style`,
+                          output_format: "jpeg"
+                        };
 
-const response = await axios.postForm(
+        const response = await axios.postForm(
   `https://api.stability.ai/v2beta/stable-image/generate/sd3`,
-  axios.toFormData(payload, new FormData()),
-  {
-    validateStatus: undefined,
-    responseType: "arraybuffer",
-    headers: { 
-      Authorization: `Bearer sk-MYAPIKEY`, 
-      Accept: "image/*" 
-    },
-  },
-);
+          axios.toFormData(payload, new FormData()),
+          {
+            validateStatus: undefined,
+            responseType: "arraybuffer",
+            headers: { 
+              Authorization: `Bearer sk-MYAPIKEY`, 
+              Accept: "image/*" 
+            },
+          },
+        );
 
-if(response.status === 200) {
-  fs.writeFileSync("./lighthouse.jpeg", Buffer.from(response.data));
-} else {
-  throw new Error(`${response.status}: ${response.data.toString()}`);
-}
-        document.getElementById('resultImage').src = `data:image/png;base64,${imageUrl}`;
-        document.getElementById('resultImage').style.display = 'block';
-        document.getElementById('downloadBtn').style.display = 'block';
-        document.getElementById('loadingMessage').style.display = 'none';
-    } catch (error) {
-        console.error('Error generating image:', error);
-        document.getElementById('loadingMessage').textContent = 'Error generating image. Please try again.';
-    }
+        if(response.status === 200) {
+          fs.writeFileSync("./lighthouse.jpeg", Buffer.from(response.data));
+        } else {
+          throw new Error(`${response.status}: ${response.data.toString()}`);
+        }
+                //document.getElementById('resultImage').src = `data:image/png;base64,${imageUrl}`;
+                document.getElementById('resultImage').src = response.data;
+                document.getElementById('resultImage').style.display = 'block';
+                document.getElementById('downloadBtn').style.display = 'block';
+                document.getElementById('loadingMessage').style.display = 'none';
+            } catch (error) {
+                console.error('Error generating image:', error);
+                document.getElementById('loadingMessage').textContent = 'Error generating image. Please try again.';
+            }
 }
 
 // Handle image download
