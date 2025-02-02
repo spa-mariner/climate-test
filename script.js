@@ -114,7 +114,7 @@ async function handleWordClick(event, d) {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': 'sk-HFQ5mF7E1bDIvoIIKo3wdnUE8ZnYPJKcCM4Kpldgw21hye00'
+                'Authorization': 'Bearer sk-HFQ5mF7E1bDIvoIIKo3wdnUE8ZnYPJKcCM4Kpldgw21hye00'
             },
             body: JSON.stringify({
                 text_prompts: [
