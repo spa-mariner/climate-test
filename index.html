@@ -1,45 +1,206 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Climate Challenges Visualizer</title>
-    <link rel="stylesheet" href="styles.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+    <title>Climate Change Word Cloud</title>
+    <!-- Update D3.js version -->
+    <script src="https://d3js.org/d3.v5.min.js"></script>
+    <!-- Add D3-cloud library -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-cloud/1.2.5/d3.layout.cloud.min.js"></script>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f0f2f5;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+        }
+        #citySelect {
+            display: block;
+            margin: 20px auto;
+            padding: 10px;
+            width: 200px;
+            font-size: 16px;
+        }
+        #wordCloud {
+            width: 100%;
+            height: 400px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin: 20px 0;
+        }
+        #loadingMessage {
+            text-align: center;
+            font-size: 18px;
+            margin-top: 20px;
+            display: none;
+        }
+        #resultImage {
+            max-width: 512px;
+            max-height: 512px;
+            display: none;
+            margin: 20px auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        #downloadBtn {
+            display: none;
+            margin: 20px auto;
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        #downloadBtn:hover {
+            background-color: #45a049;
+        }
+    </style>
 </head>
 <body>
     <div class="container">
-        <header>
-            <h1>Climate Challenges Visualizer</h1>
-            <p>Explore and visualize climate challenges in different cities</p>
-        </header>
-
-        <main>
-            <div class="selection-area">
-                <select id="citySelect">
-                    <option value="">Select a city</option>
-                    <option value="new-york">New York</option>
-                    <option value="london">London</option>
-                    <option value="tokyo">Tokyo</option>
-                    <option value="mumbai">Mumbai</option>
-                    <option value="sydney">Sydney</option>
-                </select>
-            </div>
-
-            <div id="wordCloud" class="word-cloud"></div>
-
-            <div id="generatedImage" class="image-container">
-                <img id="resultImage" style="display: none;">
-                <div id="loadingMessage" style="display: none;">Generating image...</div>
-                <button id="downloadBtn" style="display: none;">Download Image</button>
-            </div>
-        </main>
-
-        <footer>
-            <p>Created with 💚 for a sustainable future</p>
-        </footer>
+        <h1>Climate Change Challenges</h1>
+        <select id="citySelect">
+            <option value="">Select a City</option>
+            <option value="new-york">New York</option>
+            <option value="london">London</option>
+            <option value="tokyo">Tokyo</option>
+            <option value="mumbai">Mumbai</option>
+            <option value="sydney">Sydney</option>
+        </select>
+        <div id="wordCloud"></div>
+        <div id="loadingMessage">Generating image...</div>
+        <img id="resultImage" alt="Generated Image">
+        <button id="downloadBtn">Download Image</button>
     </div>
-    <script src="script.js"></script>
+
+<script>
+const cityData = {
+    'new-york': ['Sea Level Rise', 'Heat Waves', 'Flooding', 'Air Pollution', 'Urban Heat Island'],
+    'london': ['Flooding', 'Air Quality', 'Urban Heat', 'Water Scarcity', 'Biodiversity Loss'],
+    'tokyo': ['Typhoons', 'Urban Heat', 'Sea Level Rise', 'Air Pollution', 'Flooding'],
+    'mumbai': ['Monsoon Flooding', 'Sea Level Rise', 'Air Pollution', 'Water Scarcity', 'Heat Waves'],
+    'sydney': ['Bushfires', 'Drought', 'Coastal Erosion', 'Heat Waves', 'Biodiversity Loss']
+};
+
+function createWordCloud(words) {
+    // Clear previous word cloud
+    document.getElementById('wordCloud').innerHTML = '';
+
+    const width = document.getElementById('wordCloud').offsetWidth;
+    const height = 400;
+
+    // Create SVG container
+    const svg = d3.select("#wordCloud")
+        .append("svg")
+        .attr("width", width)
+        .attr("height", height);
+
+    // Create word cloud layout
+    const layout = d3.layout.cloud()
+        .size([width, height])
+        .words(words.map(function(d) {
+            return {text: d, size: 20 + Math.random() * 30};
+        }))
+        .padding(5)
+        .rotate(function() { return ~~(Math.random() * 2) * 90; })
+        .fontSize(function(d) { return d.size; })
+        .on("end", draw);
+
+    // Draw the word cloud
+    function draw(words) {
+        const g = svg.append("g")
+            .attr("transform", "translate(" + width/2 + "," + height/2 + ")");
+
+        g.selectAll("text")
+            .data(words)
+            .enter().append("text")
+            .style("font-size", function(d) { return d.size + "px"; })
+            .style("font-family", "Arial")
+            .style("fill", function() { 
+                return "hsl(" + Math.random() * 360 + ",70%,50%)"; 
+            })
+            .attr("text-anchor", "middle")
+            .attr("transform", function(d) {
+                return "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")";
+            })
+            .text(function(d) { return d.text; })
+            .style("cursor", "pointer")
+            .on("click", function(d) {
+                handleWordClick(d);
+            });
+    }
+
+    layout.start();
+}
+
+// Handle city selection
+document.getElementById('citySelect').addEventListener('change', function(e) {
+    const city = e.target.value;
+    if (city && cityData[city]) {
+        createWordCloud(cityData[city]);
+    }
+});
+
+// Handle word click and image generation
+async function handleWordClick(d) {
+    const city = document.getElementById('citySelect').value;
+    const challenge = d.text;
+    
+    document.getElementById('loadingMessage').style.display = 'block';
+    document.getElementById('resultImage').style.display = 'none';
+    document.getElementById('downloadBtn').style.display = 'none';
+
+    try {
+        // Using Stable Diffusion API (you'll need to sign up for an API key)
+        const response = await fetch('https://api.stability.ai/v1/generation/stable-diffusion-v1-5/text-to-image', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'YOUR_API_KEY'
+            },
+            body: JSON.stringify({
+                text_prompts: [{
+                    text: `${city} city facing ${challenge.toLowerCase()} climate challenge, digital art style`
+                }],
+                cfg_scale: 7,
+                height: 512,
+                width: 512,
+                samples: 1
+            })
+        });
+
+        const data = await response.json();
+        const imageUrl = data.artifacts[0].base64;
+
+        document.getElementById('resultImage').src = `data:image/png;base64,${imageUrl}`;
+        document.getElementById('resultImage').style.display = 'block';
+        document.getElementById('downloadBtn').style.display = 'block';
+        document.getElementById('loadingMessage').style.display = 'none';
+    } catch (error) {
+        console.error('Error generating image:', error);
+        document.getElementById('loadingMessage').textContent = 'Error generating image. Please try again.';
+    }
+}
+
+// Handle image download
+document.getElementById('downloadBtn').addEventListener('click', function() {
+    const image = document.getElementById('resultImage');
+    const link = document.createElement('a');
+    link.download = 'climate-challenge.png';
+    link.href = image.src;
+    link.click();
+});
+</script>
+
 </body>
 </html>
