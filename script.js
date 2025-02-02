@@ -160,7 +160,7 @@ async function handleWordClick(event, d) {
         } else {
           throw new Error(`${response.status}: ${response.data.toString()}`);
         }
-                //document.getElementById('resultImage').src = `data:image/png;base64,${imageUrl}`;
+                /*document.getElementById('resultImage').src = `data:image/png;base64,${imageUrl}`;*/
                 document.getElementById('resultImage').src = response.data;
                 document.getElementById('resultImage').style.display = 'block';
                 document.getElementById('downloadBtn').style.display = 'block';
