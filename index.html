@@ -188,7 +188,7 @@ async function handleWordClick(d) {
         document.getElementById('loadingMessage').style.display = 'none';
     } catch (error) {
         console.error('Error generating image:', error);
-        document.getElementById('loadingMessage').textContent = (JSON.stringify(data, null, 2)`Error: ${error.message}. Please try again.`;
+        document.getElementById('loadingMessage').textContent = (JSON.stringify(data, null, 2);// `Error: ${error.message}. Please try again.`;
     }
 }    
 /*async function handleWordClick(d) {
