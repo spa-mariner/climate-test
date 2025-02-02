@@ -153,14 +153,6 @@ document.getElementById('citySelect').addEventListener('change', function(e) {
 
 // Handle word click and image generation
 async function handleWordClick(d) {
-        const city = document.getElementById('citySelect').value;
-        const challenge = d.text;
-        
-        document.getElementById('loadingMessage').style.display = 'block';
-        document.getElementById('resultImage').style.display = 'none';
-        document.getElementById('downloadBtn').style.display = 'none';
-
-        async function handleWordClick(d) {
     const city = document.getElementById('citySelect').value;
     const challenge = d.text;
     
@@ -198,7 +190,7 @@ async function handleWordClick(d) {
         console.error('Error generating image:', error);
         document.getElementById('loadingMessage').textContent = `Error: ${error.message}. Please try again.`;
     }
-}    }
+}    
 /*async function handleWordClick(d) {
     const city = document.getElementById('citySelect').value;
     const challenge = d.text;
