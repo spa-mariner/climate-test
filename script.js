@@ -44,6 +44,10 @@ body {
 <button id="downloadBtn" style="display: none;">Download Image</button>
 
 <script>
+import fs from "node:fs";
+import axios from "axios";
+import FormData from "form-data";
+    
 const cityData = {
     'new-york': ['Sea Level Rise', 'Heat Waves', 'Flooding', 'Air Pollution', 'Urban Heat Island'],
     'london': ['Flooding', 'Air Quality', 'Urban Heat', 'Water Scarcity', 'Biodiversity Loss'],
@@ -111,7 +115,7 @@ async function handleWordClick(event, d) {
   
     try {
         // Using Stable Diffusion API (you'll need to sign up for an API key)
-        const response = await fetch('https://api.stability.ai/v2beta/stable-image/generate/sd3', {
+        /*const response = await fetch('https://api.stability.ai/v2beta/stable-image/generate/sd3', {
             method: 'POST',
             headers: {
                 'Content-Type': 'image/png',
@@ -132,8 +136,30 @@ async function handleWordClick(event, d) {
         });
 
         const data = await response.json();
-        const imageUrl = data.artifacts[0].base64; // Assuming the API returns base64 image
+        const imageUrl = data.artifacts[0].base64;*/ // Assuming the API returns base64 image
+        const payload = {
+  prompt: "Lighthouse on a cliff overlooking the ocean",
+  output_format: "jpeg"
+};
 
+const response = await axios.postForm(
+  `https://api.stability.ai/v2beta/stable-image/generate/sd3`,
+  axios.toFormData(payload, new FormData()),
+  {
+    validateStatus: undefined,
+    responseType: "arraybuffer",
+    headers: { 
+      Authorization: `Bearer sk-MYAPIKEY`, 
+      Accept: "image/*" 
+    },
+  },
+);
+
+if(response.status === 200) {
+  fs.writeFileSync("./lighthouse.jpeg", Buffer.from(response.data));
+} else {
+  throw new Error(`${response.status}: ${response.data.toString()}`);
+}
         document.getElementById('resultImage').src = `data:image/png;base64,${imageUrl}`;
         document.getElementById('resultImage').style.display = 'block';
         document.getElementById('downloadBtn').style.display = 'block';
