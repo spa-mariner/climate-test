@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Climate Challenges Visualizer</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-cloud/1.2.5/d3.layout.cloud.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Climate Challenges Visualizer</h1>
+            <p>Explore and visualize climate challenges in different cities</p>
+        </header>
+
+        <main>
+            <div class="selection-area">
+                <select id="citySelect">
+                    <option value="">Select a city</option>
+                    <option value="new-york">New York</option>
+                    <option value="london">London</option>
+                    <option value="tokyo">Tokyo</option>
+                    <option value="mumbai">Mumbai</option>
+                    <option value="sydney">Sydney</option>
+                </select>
+            </div>
+
+            <div id="wordCloud" class="word-cloud"></div>
+
+            <div id="generatedImage" class="image-container">
+                <img id="resultImage" style="display: none;">
+                <div id="loadingMessage" style="display: none;">Generating image...</div>
+                <button id="downloadBtn" style="display: none;">Download Image</button>
+            </div>
+        </main>
+
+        <footer>
+            <p>Created with 💚 for a sustainable future</p>
+        </footer>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
